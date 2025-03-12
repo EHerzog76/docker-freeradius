@@ -24,6 +24,7 @@ Help(){
    echo "-p --dbpwd    Password for DB-User."
    echo "-db --dbname  Database-Name."
    echo "-s --scname   K8S Storage-Class"
+   echo "-kc --ktool   e.g.: kubectl, oc, ..."
    echo "-d --dry      Dry only do not apply changes."
    echo "-h --help     Print this Help."
    echo
@@ -39,6 +40,7 @@ while [[ "$#" -gt 0 ]]; do
         -p|--dbpwd) DBPWD="$2"; shift ;;
         -db|--dbname) DBNAME="$2"; shift ;;
         -s|--scname) SCNAME="$2"; shift ;;
+        -kc|--ktool) KTool="$2"; shift ;;
         -d|--dry) DoNotApply=1 ;;
         -h|--help) Help; exit 0 ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
