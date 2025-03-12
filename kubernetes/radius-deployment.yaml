@@ -46,7 +46,7 @@ spec:
         #  secret:
         #    secretName: freeradius-secrets
       containers:
-      - image: freeradius/freeradius-server:latest-alpine
+      - image: eherzog/freeradius:0.0.1
         name: radius
         imagePullPolicy: IfNotPresent
         env:
