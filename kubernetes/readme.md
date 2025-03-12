@@ -23,6 +23,8 @@ Edit here the configuration in the directory: <b>/etc/raddb/<b>
 ```
 git clone https://github.com/EHerzog76/docker-freeradius.git
 cd docker-freeradius/kubernetes
+chmod +x ./radius-install.sh
+chmod +x ./kubectlwithenv.sh
 #
 # to see all parameters run:
 #    radius-install.sh -h
