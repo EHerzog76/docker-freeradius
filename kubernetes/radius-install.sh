@@ -70,8 +70,8 @@ if [ ${DoNotApply} == 1 ]; then
    echo "Only showing templates:"
 fi
 
-for fname in ./*.yaml; do
-    ./kubectlwithenv.sh -f ${fname} ${Debug}
+for kfname in ./*.yaml; do
+    ./kubectlwithenv.sh -f ${kfname} ${Debug}
 done
 
 echo ""
