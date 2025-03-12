@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radius-web
+  namespace: ${AppNS}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radius-web
+  template:
+    metadata:
+      labels:
+        app: radius-web
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - radius-web
+            topologyKey: kubernetes.io/hostname
+      volumes:
+        - name: mnt-sslnginx
+          persistentVolumeClaim:
+             claimName: pvc-radius-nginx
+      containers:
+      - image: freeradius/daloradius
+        name: radius-web
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PSQL_HOST
+          value: "${DBHOST}"
+        - name: PSQL_USER
+          value: "${DBUSER}"
+        - name: PSQL_PASSWORD
+          value: "${DBPWD}"
+        - name: PSQL_DATABASE
+          value: "${DBNAME}"
+        - name: PSQL_PORT
+          value: "5432"
+        - name: TZ
+          value: "Europe/Vienna"
+        volumeMounts:
+          - mountPath: "/etc/ssl/apache2"
+            name: mnt-sslnginx
+---
