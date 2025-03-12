@@ -33,6 +33,8 @@ spec:
             name: radius-raddb-overwrites
             optional: true
             items:
+            #Define her your freeradius-config-files
+            # each must be defined in the ConfigMap: cm-radius-raddb-overwrites.yaml
             - key: "authorize"
               path: "mods-config/files/authorize"
             #- key: "user-interface.properties"
