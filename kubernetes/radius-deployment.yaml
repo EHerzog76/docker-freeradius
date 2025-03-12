@@ -1,0 +1,157 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-web
+  namespace: ${AppNS}
+spec:
+  #externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+  - name: radius1812
+    port: 1812
+    protocol: UDP
+    targetPort: 1812
+  - name: radius1813
+    port: 1813
+    protocol: UDP
+    targetPort: 1813
+  selector:
+    app: radius
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-radius-web
+  namespace: ${AppNS}
+spec:
+  #externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: radius-web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radius
+  namespace: ${AppNS}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radius
+  template:
+    metadata:
+      labels:
+        app: radius
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - radius
+            topologyKey: kubernetes.io/hostname
+      volumes:
+        - name: etc-raddb
+          emptyDir:
+            sizeLimit: 500Mi
+        - name: raddb-overwrites
+          configMap:
+            name: radius-raddb-overwrites
+            optional: true
+            items:
+            - key: "authorize"
+              path: "mods-config/files/authorize"
+            #- key: "user-interface.properties"
+            #  path: "user-interface.properties"
+        #- name: etc-raddb
+        #  persistentVolumeClaim:
+        #     claimName: pvc-freeradius-raddb
+        #- name: raddb-secrets
+        #  secret:
+        #    secretName: freeradius-secrets
+      containers:
+      - image: freeradius/freeradius-server:latest-alpine
+        name: radius
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PSQL_HOST
+          value: "${DBHOST}"
+        - name: PSQL_USER
+          value: "${DBUSER}"
+        - name: PSQL_PASSWORD
+          value: "${DBPWD}"
+        - name: PSQL_DATABASE
+          value: "${DBNAME}"
+        - name: PSQL_PORT
+          value: "5432"
+        - name: TZ
+          value: "Europe/Vienna"
+        volumeMounts:
+          - name: etc-raddb
+            mountPath: "/etc/raddb"
+          - name: raddb-overwrites
+            mountPath: "/raddb-overwrites"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radius-web
+  namespace: ${AppNS}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radius-web
+  template:
+    metadata:
+      labels:
+        app: radius-web
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - radius-web
+            topologyKey: kubernetes.io/hostname
+      volumes:
+        - name: mnt-sslnginx
+          persistentVolumeClaim:
+             claimName: pvc-radius-nginx
+      containers:
+      - image: freeradius/daloradius
+        name: radius-web
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PSQL_HOST
+          value: "${DBHOST}"
+        - name: PSQL_USER
+          value: "${DBUSER}"
+        - name: PSQL_PASSWORD
+          value: "${DBPWD}"
+        - name: PSQL_DATABASE
+          value: "${DBNAME}"
+        - name: PSQL_PORT
+          value: "5432"
+        - name: TZ
+          value: "Europe/Vienna"
+        volumeMounts:
+          - mountPath: "/etc/ssl/apache2"
+            name: mnt-sslnginx
