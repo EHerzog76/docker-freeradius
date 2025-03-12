@@ -30,7 +30,7 @@ Help(){
 
 }
 
-while getopts ":hvbupnsgr:" option; do
+while getopts "hv:b:u:p:n:s:g:r:" option; do
    case $option in
       h) # display Help
          Help
@@ -57,20 +57,32 @@ while getopts ":hvbupnsgr:" option; do
    esac
 done
 
-pushd
+echo "User: ${User}"
+echo "Repo: ${Repo}"
+echo "Git:  ${srcRepo}"
+echo "Project: ${prjName}:${Version}"
+echo ""
 
 #Clone
 export GIT_SSL_NO_VERIFY=1
 cd ~
 mkdir tempbuild
-cd tempbuild
+pushd ./tempbuild
 rm -Rf ./docker-${prjName}
 git clone https://${srcRepo}
 cd ./${subPath}docker-${prjName}
 
 
 docker login $Repo -u "$User" -p "$Password"
-Repo="${Repo}/${User}/"
+if [[ "${Repo}" == "" ]]
+then
+   Repo="${User}/"
+else
+   Repo="${Repo}/${User}/"
+fi
+echo ""
+echo "Repo: ${Repo}"
+echo ""
 docker image ls|grep -P "^${prjName}"|awk '{print $1":"$2}'|xargs docker rmi
 docker build -t ${prjName} -f Dockerfile .
 docker tag ${prjName}:${Version} ${Repo}${prjName}:${Version}
