@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: radius-raddb-overwrites
-  namespace: network
+  namespace: ${AppNS}
 data:
   test-only: |
     #Test-File.
