@@ -85,6 +85,7 @@ echo "Repo: ${Repo}"
 echo ""
 docker image ls|grep -P "^${prjName}"|awk '{print $1":"$2}'|xargs docker rmi
 docker build -t ${prjName} -f Dockerfile .
+docker tag ${prjName} ${prjName}:${Version}
 docker tag ${prjName}:${Version} ${Repo}${prjName}:${Version}
 echo "Uploading to ${Repo}${prjName}:${Version}"
 docker push ${Repo}${prjName}:${Version}
