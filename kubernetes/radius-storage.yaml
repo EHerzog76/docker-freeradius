@@ -1,0 +1,26 @@
+#---
+#kind: PersistentVolumeClaim
+#apiVersion: v1
+#metadata:
+#  name: pvc-freeradius-raddb
+#  namespace: ${AppNS}
+#spec:
+#  accessModes:
+#  - ReadWriteMany
+#  storageClassName: ${SCNAME}
+#  resources:
+#    requests:
+#      storage: 100Mi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-freeradius-nginx
+  namespace: ${AppNS}
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: ${SCNAME}
+  resources:
+    requests:
+      storage: 10Mi
