@@ -13,7 +13,7 @@ done
 
 echo "Deploy file: ${fname}"
 
-#cmd = "kubectl apply -f -"
+#cmd = "${KTool} apply -f -"
 if [ ${dry} == 1 ]; then
    echo "Dry only..."
    eval "cat <<EOF
@@ -24,5 +24,5 @@ else
    eval "cat <<EOF
 $(<${fname})
 EOF
-" | kubectl apply -f -
+" | ${KTool} apply -f -
 fi
