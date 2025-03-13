@@ -7,7 +7,7 @@ data:
   test-only: |
     #Test-File.
     #
-  authorize: |
+  mods-conf--files--authorize: |
     #
     #  Configuration file for the rlm_files module.
     #  Please see rlm_files(5) manpage for more information.
