@@ -24,7 +24,7 @@ fi
 
 #
 # set localtime
-#ln -sf /usr/share/zoneinfo/$LOCALTIME /etc/localtime
+ln -sf /usr/share/zoneinfo/$LOCALTIME /etc/localtime
 
 #Sync default Freeradius-Config to /etc/raddb
 rsync -r -a --links --perms --owner --group --ignore-existing /etc/freeradius/ /etc/raddb/
