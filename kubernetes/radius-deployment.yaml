@@ -50,6 +50,14 @@ spec:
         name: radius
         imagePullPolicy: IfNotPresent
         env:
+        - name: RAD_DEBUG
+          value: "no"
+        - name: TZ
+          value: "Europe/Vienna"
+        - name: LINKS_REMOVE
+          value: ""  #mods-enabled/dhcp;mods-enabled/sql
+        - name: LINKS_ADD
+          value: "" #mods-available/dhcp,mods-enabled/dhcp;mods-available/sql,mods-enabled/sql
         - name: PSQL_HOST
           value: "${DBHOST}"
         - name: PSQL_USER
@@ -60,8 +68,6 @@ spec:
           value: "${DBNAME}"
         - name: PSQL_PORT
           value: "5432"
-        - name: TZ
-          value: "Europe/Vienna"
         volumeMounts:
           - name: etc-raddb
             mountPath: "/etc/raddb"
