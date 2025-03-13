@@ -25,7 +25,9 @@ ARG freerad_uid=101
 ARG freerad_gid=101
 
 ENV RAD_DEBUG=no \
-    TZ=Europe/Vienna
+    TZ=Europe/Vienna \
+	LINKS_REMOVE="" \
+	LINKS_ADD=""
 
 #
 #  Set up NetworkRADIUS extras repository
