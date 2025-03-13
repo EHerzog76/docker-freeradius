@@ -1,6 +1,13 @@
 #!/bin/sh
 set -e
 
+function replace_vars() {
+  eval "cat <<EOF
+  $(<$2)
+EOF
+  " > $1
+}
+
 # this if will check if the first argument is a flag
 # but only works if all arguments require a hyphenated flag
 # -v; -SL; -f arg; etc will work, but not arg1 arg2
@@ -15,10 +22,70 @@ else
     RAD_DEBUG=""
 fi
 
-rsync -r -a --links --perms --owner --group --ignore-existing /etc/freeradius/ /etc/raddb/
-#Sync custom Configs to /etc/raddb
-rsync -r /raddb-overwrites/ /etc/raddb/
+#
+# set localtime
+#ln -sf /usr/share/zoneinfo/$LOCALTIME /etc/localtime
 
+#Sync default Freeradius-Config to /etc/raddb
+rsync -r -a --links --perms --owner --group --ignore-existing /etc/freeradius/ /etc/raddb/
+
+#Detect Volume-type: Kubernetes: ConfigMap or Filesystembased
+dlist=`ls -d /raddb-overwrites/*/`
+if [[ ${#dlist[@]} -gt 0 ]]; then
+    # Volume-type: Filesystembased:
+    #Sync custom Configs to /etc/raddb
+    rsync -r /raddb-overwrites/ /etc/raddb/
+else
+    # Volume-type: ConfigMap
+    # Split Filenames: Pathname--Subpath--File-name1.conf  =>  Pathname/Subpath/File-name1.conf
+    fnames=`ls /raddb-overwrites/`
+    for fentry in ${fnames[@]}
+    do
+        if [[ $fentry =~ "--" ]]; then
+            #Split -- to /
+            fullName=(${fentry//--/\/})
+            DIRName="$(dirname "${fullName}")" ; FILE="$(basename "${fullName}")"
+            if [ ! -d "$DIRName" ]; then
+                mkdir -p "${DIRName}"
+            fi
+            #Sync custom Configs to /etc/raddb
+            cp -f /raddb-overwrites/${fentry} /etc/raddb/${fullName}
+        else
+            #Sync custom Configs to /etc/raddb
+            cp -f /raddb-overwrites/${fentry} /etc/raddb/${fentry}
+        fi
+    done
+fi
+
+removeLinks=(${LINKS_REMOVE//;/ })
+for lname in ${removeLinks[@]}
+do
+    if [ -e "$lname" ]; then
+        if [ ! -L "${lname}" ]; then
+            echo "No symlink: ${lname}"
+        else
+            #entry is a symlink
+            unlink "/etc/raddb/${lname}"
+        fi
+    else
+        echo "Not exist: ${lname}"
+    fi
+done
+
+addLinks=(${LINKS_ADD//;/ })
+for FileLink in ${addLinks[@]}
+do
+    flName=(${FileLink//,/ })
+    if [[ ${#flName[@]} -gt 1 ]]; then
+        ln -sf /etc/raddb/${flName[0]} /etc/raddb/${flName[1]}
+    else
+        echo "Warning: Can not create link ${flName}"
+    fi
+done
+
+#Evaluate if needed:
+#   Replace Vars in Files
+#replace_vars '/etc/raddb/file1.conf' '/etc/raddb/10_file1.conf'
 
 # check for the expected command
 if [ "$1" = 'radiusd' ]; then
