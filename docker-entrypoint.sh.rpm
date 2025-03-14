@@ -1,7 +1,14 @@
-#!/bin/sh
-set -e
+#!/bin/bash
 
-function replace_vars() {
+set -x
+colorblack='\033[30m'
+colorred='\033[31m'
+colorgreen='\033[32m'
+coloryellow='\033[33m'
+colorblue='\033[34m'
+stylereset='\033[0m'
+
+replace_vars() {
   eval "cat <<EOF
   $(<$2)
 EOF
@@ -22,9 +29,10 @@ else
     RAD_DEBUG=""
 fi
 
-#
-# set localtime
-ln -sf /usr/share/zoneinfo/$LOCALTIME /etc/localtime
+if [[ "${TZ}" =~ ^[A-Za-z]+.*$ ]]; then
+    # set localtime
+    ln -sf /usr/share/zoneinfo/$TZ /etc/localtime
+fi
 
 #Sync default Freeradius-Config to /etc/raddb
 rsync -r -a --links --perms --owner --group --ignore-existing /etc/freeradius/ /etc/raddb/
@@ -41,10 +49,10 @@ else
     fnames=`ls /raddb-overwrites/`
     for fentry in ${fnames[@]}
     do
-        if [[ $fentry =~ "--" ]]; then
+        if [[ "$fentry" =~ -- ]]; then
             #Split -- to /
             fullName=(${fentry//--/\/})
-            DIRName="$(dirname "${fullName}")" ; FILE="$(basename "${fullName}")"
+            DIRName="$(dirname ${fullName})" ; FILE="$(basename ${fullName})"
             if [ ! -d "$DIRName" ]; then
                 mkdir -p "${DIRName}"
             fi
