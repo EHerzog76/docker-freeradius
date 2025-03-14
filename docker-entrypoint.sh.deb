@@ -37,33 +37,29 @@ fi
 #Sync default Freeradius-Config to /etc/raddb
 rsync -r -a --links --perms --owner --group --ignore-existing /etc/freeradius/ /etc/raddb/
 
-#Detect Volume-type: Kubernetes: ConfigMap or Filesystembased
-dlist=`ls -d /raddb-overwrites/*/`
-if [[ ${#dlist[@]} -gt 0 ]]; then
-    # Volume-type: Filesystembased:
-    #Sync custom Configs to /etc/raddb
-    rsync -r /raddb-overwrites/ /etc/raddb/
-else
-    # Volume-type: ConfigMap
-    # Split Filenames: Pathname--Subpath--File-name1.conf  =>  Pathname/Subpath/File-name1.conf
-    fnames=`ls /raddb-overwrites/`
-    for fentry in ${fnames[@]}
-    do
-        if [[ "$fentry" =~ -- ]]; then
-            #Split -- to /
-            fullName=(${fentry//--/\/})
-            DIRName="$(dirname ${fullName})" ; FILE="$(basename ${fullName})"
-            if [ ! -d "$DIRName" ]; then
-                mkdir -p "${DIRName}"
-            fi
-            #Sync custom Configs to /etc/raddb
-            cp -f /raddb-overwrites/${fentry} /etc/raddb/${fullName}
-        else
-            #Sync custom Configs to /etc/raddb
-            cp -f /raddb-overwrites/${fentry} /etc/raddb/${fentry}
+#Sync custom Configs to /etc/raddb
+# exclude all filenames with  --
+rsync -r --copy-links --exclude=-- /raddb-overwrites/ /etc/raddb/
+
+# Split Filenames: Pathname--Subpath--File-name1.conf  =>  Pathname/Subpath/File-name1.conf
+fnames=`ls /raddb-overwrites/`
+for fentry in ${fnames[@]}
+do
+    if [[ "$fentry" =~ -- ]]; then
+        #Split -- to /
+        fullName=(${fentry//--/\/})
+        DIRName="$(dirname ${fullName})" ; FILE="$(basename ${fullName})"
+        if [ ! -d "$DIRName" ]; then
+            mkdir -p "${DIRName}"
         fi
-    done
-fi
+        #Sync custom Configs to /etc/raddb
+        cp -f /raddb-overwrites/${fentry} /etc/raddb/${fullName}
+    else
+        echo "Already synced: ${fentry}"
+        ###Sync custom Configs to /etc/raddb
+        #cp -f /raddb-overwrites/${fentry} /etc/raddb/${fentry}
+    fi
+done
 
 removeLinks=(${LINKS_REMOVE//;/ })
 for lname in ${removeLinks[@]}
