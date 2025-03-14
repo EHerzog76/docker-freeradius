@@ -95,8 +95,6 @@ done
 #   Replace Vars in Files
 #replace_vars '/etc/raddb/file1.conf' '/etc/raddb/10_file1.conf'
 
-exit 0
-
 # check for the expected command
 if [ "$1" = 'freeradius' ]; then
     shift
