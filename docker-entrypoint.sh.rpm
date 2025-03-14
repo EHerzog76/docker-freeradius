@@ -39,7 +39,7 @@ rsync -r -a --links --perms --owner --group --ignore-existing /etc/freeradius/ /
 
 #Sync custom Configs to /etc/raddb
 # exclude all filenames with  --
-rsync -r --copy-links --exclude=-- /raddb-overwrites/ /etc/raddb/
+rsync -r --copy-links --exclude="*--*" /raddb-overwrites/ /etc/raddb/
 
 # Split Filenames: Pathname--Subpath--File-name1.conf  =>  Pathname/Subpath/File-name1.conf
 fnames=`ls /raddb-overwrites/`
