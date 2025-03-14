@@ -66,7 +66,9 @@ echo ""
 #Clone
 export GIT_SSL_NO_VERIFY=1
 cd ~
-mkdir tempbuild
+if [[ -d ./tempbuild ]]; then
+    mkdir tempbuild
+fi
 pushd ./tempbuild
 rm -Rf ./docker-${prjName}
 git clone https://${srcRepo}
