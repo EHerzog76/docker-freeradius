@@ -50,7 +50,7 @@ do
         fullName=(${fentry//--/\/})
         DIRName="$(dirname ${fullName})" ; FILE="$(basename ${fullName})"
         if [ ! -d "$DIRName" ]; then
-            mkdir -p "${DIRName}"
+            mkdir -p "/etc/raddb/${DIRName}"
         fi
         #Sync custom Configs to /etc/raddb
         cp -f /raddb-overwrites/${fentry} /etc/raddb/${fullName}
