@@ -1,16 +1,18 @@
 # freeradius Kubernetes setup
 This is a base pattern for running freeradius on Kubernetes.
 Here we use a simple shell-based installation method.
-If you use it in your production environment you will use your preferred installation method e.g. ArgoCD, flux or ...
+If you use it in your production environment you will use your preferred installation method e.g. ArgoCD, flux or ...<br>
+In this setup we use a deployment-configuration, but you can also use a daemonset.
 
 ## Configuration-Options
 To modify the freeradius configuration, we have to different ways.
-1. Use a volume of type ```EmptyDir``` and a ```ConfigMap``` and define here all configuration-files
+1. Use a volume of type ```EmptyDir``` and a ```ConfigMap``` and define here all configuration-files.
 2. Use a persistent Volume and connet to your Pod to change here the configuration-files
 
 ### 1. EmptyDir and ConfigMap
-Edit the cm-radius-raddb-overwrites.yaml and add here all your freeradius configuration-files.
-But only real files not the file-links !
+Edit the cm-radius-raddb-overwrites.yaml and add here all your freeradius configuration-files.<br>
+But only real files not the file-links (for this edit the ENV-section in the deployment: LINKS_REMOVE / LINKS_ADD) !<br>
+#### ConfigMap example
 ```
 apiVersion: v1
 kind: ConfigMap
