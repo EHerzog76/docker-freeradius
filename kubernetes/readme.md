@@ -2,7 +2,7 @@
 This is a base pattern for running freeradius on Kubernetes.
 Here we use a simple shell-based installation method.
 If you use it in your production environment you will use your preferred installation method e.g. ArgoCD, flux or ...<br>
-In this setup we use a deployment-configuration, but you can also use a daemonset.
+In this setup we use a ```deployment``` configuration, but you can also use a ```daemonset```.
 
 ## Configuration-Options
 To modify the freeradius configuration, we have to different ways.
