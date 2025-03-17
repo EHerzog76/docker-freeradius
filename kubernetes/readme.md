@@ -11,6 +11,21 @@ To modify the freeradius configuration, we have to different ways.
 ### 1. EmptyDir and ConfigMap
 Edit the cm-radius-raddb-overwrites.yaml and add here all your freeradius configuration-files.
 But only real files not the file-links !
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: radius-raddb-overwrites
+  namespace: radius
+data:
+  #Pathseperator: --
+  #  mods-config--files--authorize  will be translated in:
+  #       /etc/raddb/mods-config/files/authorize
+  mods-config--files--authorize: |+
+    #Your configuration...
+  sites-available--site1.conf: |+
+    #Your configuration...
+```
 
 ### 2. Volume
 Enter your Pod:
