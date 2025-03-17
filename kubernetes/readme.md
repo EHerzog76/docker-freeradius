@@ -55,5 +55,8 @@ radius-install.sh -kd k8sdomain.local -n namespace -kc <kubectl | oc>
 
 ## Build (Optional)
 ```
+#For help:
+./build-run.sh -h
+
 ./build-run.sh -u Username -p *** -n freeradius -v x.y.z -r https://your-container-repository.domain
 ```
