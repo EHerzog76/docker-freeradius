@@ -27,3 +27,11 @@ docker compose up -d
 
 ## Configuration for Kubernetes and OKD/Openshift
 See here in [./kubernetes/readme.md](https://github.com/EHerzog76/docker-freeradius/blob/main/kubernetes/readme.md)
+
+## Build (Optional)
+```
+#For help:
+./build-run.sh -h
+
+./build-run.sh -u Username -p *** -n freeradius -v x.y.z -r https://your-container-repository.domain
+```
