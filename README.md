@@ -35,3 +35,6 @@ See here in [./kubernetes/readme.md](https://github.com/EHerzog76/docker-freerad
 
 ./build-run.sh -u Username -p *** -n freeradius -v x.y.z -r https://your-container-repository.domain
 ```
+## freeradius documentations
+- [wiki.ubuntuusers.de/FreeRADIUS](https://wiki.ubuntuusers.de/FreeRADIUS/)
+- [freeradius-server 3.2.7](https://www.freeradius.org/documentation/freeradius-server/3.2.7/)
