@@ -1,0 +1,30 @@
+# vim: noai:ts=2:sw=2:expandtab
+#
+# This example shows how this image can be used as a MTA in combination with Dovecot. Dovecot
+# is used for authentication here. The example is not complete, but should give you a general
+# overview of how flexible the image is.
+#
+version: "3.8"
+services:
+  radiusd:
+    image: eherzog/freeradius:0.0.3
+    container_name: radiusd
+    hostname: radius.thbweb.local
+    #ports:
+      #- "1812:1812/udp"
+      #- "1813:1813/udp"
+    restart: unless-stopped    #always
+    privileged: true
+    environment:
+      #- INTERFACE=eth0
+      - TZ=Europe/Vienna
+      - RAD_DEBUG=yes
+    volumes:
+      - ./data:/etc/raddb
+      - ./data-raddb-overwrites:/raddb-overwrites
+    #network_mode: host
+    networks:
+      - frontend
+
+networks:
+  frontend: {}
