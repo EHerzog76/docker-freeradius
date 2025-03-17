@@ -13,6 +13,12 @@ Edit the ```compose.yaml```
 | LINKS_ADD | Links to add to the /etc/raddb - directory |
 | TZ | Timezone |
 
+### Volumes
+| Path | Description |
+| :---- | :---- |
+| /etc/raddb | The freeradius  raddb, on container start, the original radius-raddb will be synced to this folder (no files will be overwritten). |
+| /raddb-overwrites | Optional, all config files from here will be synced to the /etc/raddb (existing files will be overwritten). |
+
 Start the container with:
 ```
 docker compose up -d
