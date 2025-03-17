@@ -24,21 +24,21 @@ spec:
                 values:
                 - radius
             topologyKey: kubernetes.io/hostname
+      ###
+      ### With SCC for OKD/OpenShift
+      #securityContext: {}
+      #serviceAccount: sa-radius
+      #serviceAccountName: sa-radius
+      ###
       volumes:
         - name: etc-raddb
           emptyDir:
             sizeLimit: 500Mi
         - name: raddb-overwrites
           configMap:
+            defaultMode: 438
             name: radius-raddb-overwrites
             optional: true
-            items:
-            #Define her your freeradius-config-files
-            # each must be defined in the ConfigMap: cm-radius-raddb-overwrites.yaml
-            - key: "authorize"
-              path: "mods-config/files/authorize"
-            #- key: "user-interface.properties"
-            #  path: "user-interface.properties"
         #- name: etc-raddb
         #  persistentVolumeClaim:
         #     claimName: pvc-freeradius-raddb
@@ -58,16 +58,6 @@ spec:
           value: ""  #mods-enabled/dhcp;mods-enabled/sql
         - name: LINKS_ADD
           value: "" #mods-available/dhcp,mods-enabled/dhcp;mods-available/sql,mods-enabled/sql
-        - name: PSQL_HOST
-          value: "${DBHOST}"
-        - name: PSQL_USER
-          value: "${DBUSER}"
-        - name: PSQL_PASSWORD
-          value: "${DBPWD}"
-        - name: PSQL_DATABASE
-          value: "${DBNAME}"
-        - name: PSQL_PORT
-          value: "5432"
         volumeMounts:
           - name: etc-raddb
             mountPath: "/etc/raddb"
