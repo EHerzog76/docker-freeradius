@@ -17,7 +17,7 @@ Enter your Pod:
 ```
 kubectl -n radius exec -it radius-<Pod-Instancename> -- /bin/bash
 ```
-Edit here the configuration in the directory: <b>/etc/raddb/<b>
+Edit here the configuration in the directory: <b>/etc/raddb/</b>
 
 ## Configuration
 ```
