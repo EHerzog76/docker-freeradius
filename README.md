@@ -4,7 +4,8 @@ The big advantage over all other docker based freeradius implementations is,<br>
 that this version can be configured as you need it, without to build a new container and on kubernetes no persistent volumes are needed.<br>
 
 ## Configuration for Docker
-Edit the ```compose.yaml```
+Edit the [compose.yaml](https://github.com/EHerzog76/docker-freeradius/blob/main/compose.yaml)
+
 ### Environment Variables
 | Name | Values / Description |
 | :---- | :---- |
