@@ -9,14 +9,13 @@ services:
   radiusd:
     image: eherzog/freeradius:0.0.3
     container_name: radiusd
-    hostname: radius.thbweb.local
+    hostname: radius.yourdomain.local
     #ports:
       #- "1812:1812/udp"
       #- "1813:1813/udp"
     restart: unless-stopped    #always
     privileged: true
     environment:
-      #- INTERFACE=eth0
       - TZ=Europe/Vienna
       - RAD_DEBUG=yes
     volumes:
