@@ -19,4 +19,4 @@ docker compose up -d
 ```
 
 ## Configuration for Kubernetes and OKD/Openshift
-See here in [./kubernetes/readme.md](https://github.com/EHerzog76/docker-freeradius/kubernetes/readme.md)
+See here in [./kubernetes/readme.md](https://github.com/EHerzog76/docker-freeradius/blob/main/kubernetes/readme.md)
