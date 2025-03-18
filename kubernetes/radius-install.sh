@@ -2,14 +2,15 @@
 
 DoNotApply="0"
 export KTool=kubectl  #oc
-export K8SDOMAIN=dmz-k8.postag.intern
+export K8SDOMAIN=cluster.local
 export K8SREPO=private-repository-k8s.default.svc.${K8SDOMAIN}:5000
 export AppNS=radius
 export DBHOST=hippo-ha.postgres-operator.svc.${K8SDOMAIN}
 export DBUSER=radius
-export DBPWD=`${KTool} -n postgres-operator get secrets hippo-pguser-zabbix -o jsonpath="{.data.password}" | base64 -d`
+export DBPWD="******"
+#export DBPWD=`${KTool} -n postgres-operator get secrets hippo-pguser-radius -o jsonpath="{.data.password}" | base64 -d`
 export DBNAME=radius
-export SCNAME=smb-wnetconfbck01
+export SCNAME=your-storage-class-name
 
 Help(){
    # Display Help
@@ -82,7 +83,6 @@ echo "          https://github.com/FreeRADIUS/freeradius-server/blob/v3.0.x/scri
 echo ""
 echo "FreeRadius raddb-Volume:"
 echo "   kubectl get pvc pvc-freeradius-raddb"
-echo "   //wnetconfbck01.postag.intern/k8s-dmzmon/pvc-..."
 echo ""
 
 export KTool=""
